@@ -6,21 +6,72 @@ using Px.Net.Common.Exceptions;
 
 namespace Px.Net.Common.Repositories
 {
+    /// <summary>
+    /// Base interface for building UnitOfWork classes.
+    /// </summary>
+    /// <typeparam name="TContext">Implementation of <see cref="DbContext"/></typeparam>
 	public interface IUnitOfWork<TContext>
         where TContext : DbContext
 	{
+        /// <summary>
+        /// Get a generic repository for a TEntity class.
+        /// </summary>
+        /// <typeparam name="TEntity"></typeparam>
+        /// <returns></returns>
         IDbRepository<TEntity> GetRepository<TEntity>() where TEntity : class;
 
+        /// <summary>
+        /// Starts a new transaction on the database
+        /// <exception cref="InvalidOperationException"></exception>
+        /// </summary>
         void BeginTransaction();
+
+        /// <summary>
+        /// Starts a new transaction on the database
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="InvalidOperationException"></exception>
+        /// <returns></returns>
         Task BeginTransactionAsync(CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Commits the current transaction
+        /// <exception cref="InvalidTransactionException" />
+        /// </summary>
         void Commit();
+
+        /// <summary>
+        /// Commits the current transaction
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="InvalidTransactionException" />
+        /// <returns></returns>
         Task CommitAsync(CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Rolls back the current transaction       
+        /// <exception cref="InvalidTransactionException" />
+        /// </summary>
         void Rollback();
+
+        /// <summary>
+        /// Rolls back the current transaction
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <exception cref="InvalidTransactionException" />
+        /// <returns></returns>
         Task RollbackAsync(CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Save current changes to the database
+        /// </summary>
         void SaveChanges();
+
+        /// <summary>
+        /// Save current changes to the database
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
         Task SaveChangesAsync(CancellationToken cancellationToken = default);
 	}
 

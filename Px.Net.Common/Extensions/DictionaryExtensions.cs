@@ -5,6 +5,14 @@ namespace Px.Net.Common.Extensions
 {
 	public static class DictionaryExtensions
 	{
+		/// <summary>
+		/// Get a readable representation of the Dictionary. 
+		/// </summary>
+		/// <typeparam name="TKey"></typeparam>
+		/// <typeparam name="TValue"></typeparam>
+		/// <param name="dict"></param>
+		/// <param name="useFlatList">If <c>true</c> the dictionary is return on a single line. Otherwise it will be formatted over multiple lines.</param>
+		/// <returns></returns>
 		public static string Readable<TKey, TValue>(this Dictionary<TKey, TValue>? dict, bool useFlatList = true)
 			where TKey : notnull
 		{

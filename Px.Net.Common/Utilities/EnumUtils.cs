@@ -5,6 +5,11 @@ namespace Px.Net.Common.Utilities
 {
 	public static class EnumUtils
 	{
+		/// <summary>
+		/// Get all values of an Enum type.
+		/// </summary>
+		/// <typeparam name="TEnum"></typeparam>
+		/// <returns></returns>
 		public static IEnumerable<EnumDto> GetValues<TEnum>()
 			where TEnum : Enum
 		{

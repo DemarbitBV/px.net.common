@@ -7,44 +7,154 @@ using Px.Net.Common.Extensions;
 
 namespace Px.Net.Common.Repositories
 {
+	/// <summary>
+	/// Generic database repository
+	/// </summary>
+	/// <typeparam name="TEntity"></typeparam>
 	public interface IDbRepository<TEntity>
 		where TEntity : class
 	{
 		#region Create methods
+		/// <summary>
+		/// Tracks a new record by settings it's state to <see cref="EntityState.Added"/>
+		/// </summary>
+		/// <param name="entity"></param>
 		void Insert(TEntity entity);
 		#endregion
 
 		#region Read methods
+		/// <summary>
+		/// Check if any records exists for the current Entity Type
+		/// </summary>
+		/// <param name="filter">Optional filter expression</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<bool> AnyAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Count the number of records in the set
+		/// </summary>
+		/// <param name="filter">Optional filter expression</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<int> CountAsync(Expression<Func<TEntity, bool>>? filter = null, CancellationToken cancellationToken = default);
 
+		/// <summary>
+		/// Returns a list of records in the set given a specific filter
+		/// </summary>
+		/// <param name="filter">Optional filter expression</param>
+		/// <param name="includes">Optional include list where includes should be separated by a comma</param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<List<TEntity>> ListAsync(Expression<Func<TEntity, bool>>? filter = null, string? includes = null, CancellationToken cancellationToken = default);
-		Task<List<TResult>> ListAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? filter = null, string? includes = null, CancellationToken cancellationToken = default);
 
+        /// <summary>
+        /// Returns a list of records in the set given a specific filter
+        /// </summary>
+		/// <param name="selector">Selector expression used in the Select statement of the query.
+        /// <param name="filter">Optional filter expression</param>
+        /// <param name="includes">Optional include list where includes should be separated by a comma</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns></returns>
+        Task<List<TResult>> ListAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? filter = null, string? includes = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get a single record based on it's Id
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="includes"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<TEntity?> GetAsync(string id, string? includes = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get's a single record based on it's Id
+		/// </summary>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="id"></param>
+		/// <param name="selector"></param>
+		/// <param name="includes"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<TResult?> GetAsync<TResult>(string id, Expression<Func<TEntity, TResult>> selector, string? includes = null, CancellationToken cancellationToken = default);
 
+		/// <summary>
+		/// Get the first available record given the filter
+		/// </summary>
+		/// <param name="filter"></param>
+		/// <param name="includes"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<TEntity?> GetAsync(Expression<Func<TEntity, bool>>? filter = null, string? includes = null, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Get the first available record given the filter
+		/// </summary>
+		/// <typeparam name="TResult"></typeparam>
+		/// <param name="selector"></param>
+		/// <param name="filter"></param>
+		/// <param name="includes"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task<TResult?> GetAsync<TResult>(Expression<Func<TEntity, TResult>> selector, Expression<Func<TEntity, bool>>? filter = null, string? includes = null, CancellationToken cancellationToken = default);
 		#endregion
 
 		#region Update methods
+		/// <summary>
+		/// Tracks a record by setting it's state to <see cref="EntityState.Modified"/>
+		/// </summary>
+		/// <param name="entity"></param>
 		void Update(TEntity entity);
+
+		/// <summary>
+		/// Fetch the record based on it's Id and update that record's values from the <paramref name="entity"/> object.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="entity"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task UpdateAsync(string id, TEntity entity, CancellationToken cancellationToken = default);
+
+		/// <summary>
+		/// Fetch the record based on it's Id and update that record's values from the <paramref name="values"/> dictionary.
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="values"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task UpdateAsync(string id, Dictionary<string, object?> values, CancellationToken cancellationToken = default);
 		#endregion
 
 		#region Delete methods
+		/// <summary>
+		/// Marks entity as deleted by setting it's state to <see cref="EntityState.Deleted"/>
+		/// </summary>
+		/// <param name="entity"></param>
 		void Delete(TEntity entity);
 
+		/// <summary>
+		/// Search the record by it's id and mark it as deleted
+		/// </summary>
+		/// <param name="id"></param>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task DeleteAsync(string id, CancellationToken cancellationToken = default);
 		#endregion
 
 		#region Save methods
+		/// <summary>
+		/// Save all changes
+		/// </summary>
+		/// <param name="cancellationToken"></param>
+		/// <returns></returns>
 		Task SaveChangesAsync(CancellationToken cancellationToken = default);
 		#endregion
 	}
 
+	/// <summary>
+	/// Generic database repository
+	/// </summary>
+	/// <typeparam name="TEntity"></typeparam>
     public class DbRepository<TEntity> : IDbRepository<TEntity>
 		where TEntity : class
 	{

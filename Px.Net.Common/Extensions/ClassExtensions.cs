@@ -5,6 +5,12 @@ namespace Px.Net.Common.Extensions
 {
 	public static class ClassExtensions
 	{
+		/// <summary>
+		/// Merge two objects. If an Id property exists on the generic type, that property will be ignored.
+		/// </summary>
+		/// <typeparam name="TEntity"></typeparam>
+		/// <param name="source">Object that should be updated</param>
+		/// <param name="mergeWith">Object containing new values</param>
 		public static void Merge<TEntity>(this TEntity source, TEntity mergeWith)
 			where TEntity : class
 		{
@@ -19,6 +25,12 @@ namespace Px.Net.Common.Extensions
 			}
 		}
 
+		/// <summary>
+		/// Merge the values defined in the dictionary with the source object.
+		/// </summary>
+		/// <typeparam name="TEntity"></typeparam>
+		/// <param name="source">Object that should be updated</param>
+		/// <param name="values">A dictionary where the keys contain the property names</param>
 		public static void Merge<TEntity>(this TEntity source, Dictionary<string, object?> values)
 			where TEntity : class
 		{
@@ -35,6 +47,12 @@ namespace Px.Net.Common.Extensions
 			}
 		}
 
+		/// <summary>
+		/// Return all writeable properties (Public, Instance , Declared) for a given type.
+		/// </summary>
+		/// <typeparam name="TEntity"></typeparam>
+		/// <param name="source"></param>
+		/// <returns></returns>
 		public static PropertyInfo[] GetWriteableProperties<TEntity>(this TEntity source)
 			where TEntity : class
 		{

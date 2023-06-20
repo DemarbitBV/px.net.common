@@ -4,10 +4,28 @@ using System.Text;
 
 namespace Px.Net.Common.Visitors
 {
+    /// <summary>
+    /// A visitor class for <see cref="Expression"/> objects that builds a string representation of that Expression.
+    /// </summary>
     public class ExpressionStringBuilderVisitor : ExpressionVisitor
     {
         private readonly StringBuilder _builder = new();
 
+        /// <summary>
+        /// Get the string representation of the Expression. This call combines the <see cref="ExpressionVisitor.Visit(Expression?)"/> and <see cref="ToString()"/> method calls.
+        /// </summary>
+        /// <param name="expression"></param>
+        /// <returns></returns>
+        public string Describe(Expression expression)
+        {
+            this.Visit(expression);
+            return ToString();
+        }
+
+        /// <summary>
+        /// Get the string representation of the Expression (only available after <see cref="ExpressionVisitor.Visit(Expression?)"/> has been called)
+        /// </summary>
+        /// <returns></returns>
         public override string ToString() => _builder.ToString();
 
         protected override Expression VisitUnary(UnaryExpression node)
