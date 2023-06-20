@@ -5,12 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <PackageId>Px.Net.Common</PackageId>
-    <Version>1.0.0</Version>
+    <Version>1.0.1</Version>
     <Authors>Nicolas Demarbaix</Authors>
     <Company>Demarbit BV</Company>
     <Title>Px Common .NET features</Title>
     <Copyright>© Demarbit 2023</Copyright>
     <RepositoryUrl>https://github.com/DemarbitBV/px.net.common</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,6 +27,7 @@
     <None Remove="Utilities\" />
     <None Remove="MediatR" />
     <None Remove="Mediator\" />
+    <None Remove="docs\" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.7" />
@@ -40,5 +43,7 @@
     <Folder Include="Models\" />
     <Folder Include="Utilities\" />
     <Folder Include="Mediator\" />
+    <Folder Include="docs\" />
+    <None Include="docs\README.md" Pack="true" PackagePath="\"/>
   </ItemGroup>
 </Project>

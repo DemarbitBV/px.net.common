@@ -1,0 +1,1 @@
+﻿A set of common classes/interfaces to use in API projects.

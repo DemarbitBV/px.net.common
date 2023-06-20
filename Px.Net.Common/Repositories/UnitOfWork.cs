@@ -49,6 +49,19 @@ namespace Px.Net.Common.Repositories
         Task CommitAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
+        /// Tries to commit the current transaction. If there is no current transaction, nothing happens
+        /// </summary>
+        /// <returns><c>True</c> or <c>False</c> depending on whether a transaction was succesfully committed</returns>
+        bool TryCommit();
+
+        /// <summary>
+        /// Tries to commit the current transaction. If there is no current transaction, nothing happens
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns><c>True</c> or <c>False</c> depending on whether a transaction was succesfully committed</returns>
+        Task<bool> TryCommitAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
         /// Rolls back the current transaction       
         /// <exception cref="InvalidTransactionException" />
         /// </summary>
@@ -61,6 +74,19 @@ namespace Px.Net.Common.Repositories
         /// <exception cref="InvalidTransactionException" />
         /// <returns></returns>
         Task RollbackAsync(CancellationToken cancellationToken = default);
+
+        /// <summary>
+        /// Tries to rollback the current transaction. If there is no current transaction, nothing happens.
+        /// </summary>
+        /// <returns><c>True</c> or <c>False</c> depending on whether a transaction was succesfully rollbacked</returns>
+        bool TryRollback();
+
+        /// <summary>
+        /// Tries to rollback the current transaction. If there is no current transaction, nothing happens.
+        /// </summary>
+        /// <param name="cancellationToken"></param>
+        /// <returns><c>True</c> or <c>False</c> depending on whether a transaction was succesfully rollbacked</returns>
+        Task<bool> TryRollbackAsync(CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Save current changes to the database
@@ -164,6 +190,60 @@ namespace Px.Net.Common.Repositories
             }
         }
 
+        public bool TryCommit()
+        {
+            if (_currentTransaction == null)
+            {
+                _logger.LogDebug("No active transaction found. No commit executed");
+                return false;
+            }
+
+            try
+            {
+                _logger.LogDebug("Trying to commit the current transaction");
+                _context.SaveChanges();
+                _currentTransaction.Commit();
+                _logger.LogDebug("Transaction committed");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not commit current transaction. Error: {Message}", ex.Message);
+                return false;
+            }
+            finally
+            {
+                _currentTransaction.Dispose();
+            }
+        }
+
+        public async Task<bool> TryCommitAsync(CancellationToken cancellationToken = default)
+        {
+            if (_currentTransaction == null)
+            {
+                _logger.LogDebug("No active transaction found. No commit executed");
+                return false;
+            }
+
+            try
+            {
+                _logger.LogDebug("Trying to commit the current transaction");
+                await _context.SaveChangesAsync(cancellationToken);
+                await _currentTransaction.CommitAsync(cancellationToken);
+                _logger.LogDebug("Transaction committed");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not commit current transaction. Error: {Message}", ex.Message);
+                return false;
+            }
+            finally
+            {
+                _currentTransaction.Dispose();
+            }
+        }
+
         public void Rollback()
         {
             if (_currentTransaction == null)
@@ -188,6 +268,58 @@ namespace Px.Net.Common.Repositories
 
             await _currentTransaction.RollbackAsync(cancellationToken);
             _currentTransaction.Dispose();
+        }
+
+        public bool TryRollback()
+        {
+            if (_currentTransaction == null)
+            {
+                _logger.LogDebug("No active transaction found. No rollback executed");
+                return false;
+            }
+
+            try
+            {
+                _logger.LogDebug("Trying to rollback the current transaction");
+                _currentTransaction.Rollback();
+                _logger.LogDebug("Transaction rollbacked");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not rollback current transaction. Error: {Message}", ex.Message);
+                return false;
+            }
+            finally
+            {
+                _currentTransaction.Dispose();
+            }
+        }
+
+        public async Task<bool> TryRollbackAsync(CancellationToken  cancellationToken = default)
+        {
+            if (_currentTransaction == null)
+            {
+                _logger.LogDebug("No active transaction found. No rollback executed");
+                return false;
+            }
+
+            try
+            {
+                _logger.LogDebug("Trying to rollback the current transaction");
+                await _currentTransaction.RollbackAsync(cancellationToken);
+                _logger.LogDebug("Transaction rollbacked");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Could not rollback current transaction. Error: {Message}", ex.Message);
+                return false;
+            }
+            finally
+            {
+                _currentTransaction.Dispose();
+            }
         }
 
         public void SaveChanges()
