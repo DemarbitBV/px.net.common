@@ -4,6 +4,13 @@
     <TargetFramework>net7.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Px.Net.Common</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Nicolas Demarbaix</Authors>
+    <Company>Demarbit BV</Company>
+    <Title>Px Common .NET features</Title>
+    <Copyright>© Demarbit 2023</Copyright>
+    <RepositoryUrl>https://github.com/DemarbitBV/px.net.common</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
